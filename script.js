@@ -150,5 +150,5 @@ window.addEventListener('load', () => {
   
   // Hacer funciones accesibles globalmente (por los botones en el HTML generado)
   window.addToFavorites = addToFavorites;
-  window.removeFromFavorites = removeFromFavorites;
-  
+  window.removeFromFavorites = removeFromFavorites;  
+  window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;
