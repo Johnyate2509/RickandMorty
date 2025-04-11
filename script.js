@@ -21,12 +21,12 @@ window.addEventListener('load', () => {
   import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
   
   const firebaseConfig = {
-    apiKey: "AIzaSyBAAISgYtuk6u2YUNqOHCf8BQ5Q5piuUps",
-    authDomain: "rickandmorty-56dd4.firebaseapp.com",
-    projectId: "rickandmorty-56dd4",
-    storageBucket: "rickandmorty-56dd4.firebasestorage.app",
-    messagingSenderId: "980829339219",
-    appId: "1:980829339219:web:51063b5bbbe146a07350a6"
+    apiKey: "AIzaSyBCJXeinurb2klueon_QMpwanb8uMy7s1E",
+    authDomain: "rickandmorty-a77e9.firebaseapp.com",
+    projectId: "rickandmorty-a77e9",
+    storageBucket: "rickandmorty-a77e9.firebasestorage.app",
+    messagingSenderId: "996378141670",
+    appId: "1:996378141670:web:f441b528bb30766e1f6c27"
   };
   
   const app = initializeApp(firebaseConfig);
