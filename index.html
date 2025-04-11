@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rick and Morty Web</title>
+  <link rel="icon" href="./favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Firebase App (base) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<!-- Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>Rick and Morty</h1>
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Navegación Principal -->
+  <nav id="main-nav">
+    <ul>
+      <li><a href="#home">Inicio</a></li>
+      <li><a href="#characters">Personajes</a></li>
+      <li><a href="#episodes">Episodios</a></li>
+      <li><a href="#locations">Ubicaciones</a></li>
+      <li><a href="#favorites">Favoritos</a></li>
+      <li><a href="#register">Registro</a></li>
+    </ul>
+  </nav>
+
+  <!-- Buscador y Filtro -->
+  <section id="search-filter">
+    <input type="text" id="search-input" placeholder="Buscar personaje...">
+    <select id="status-filter">
+      <option value="">Todos</option>
+      <option value="alive">Vivo</option>
+      <option value="dead">Muerto</option>
+      <option value="unknown">Desconocido</option>
+    </select>
+  </section>
+
+  <!-- Contenido Principal -->
+  <main id="content">
+    <section id="home">
+      <h2>Bienvenido al multiverso de Rick and Morty</h2>
+    </section>
+    <section id="characters"></section>
+    <section id="episodes"></section>
+    <section id="locations"></section>
+    <section id="favorites"></section>
+    <section id="register">
+      <form id="register-form">
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="apellido" placeholder="Apellido" required>
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <input type="text" name="usuario" placeholder="Nombre de usuario" required>
+        <input type="date" name="fecha_nacimiento" required>
+        <select name="universo" required>
+          <option value="">Elige un universo</option>
+          <option value="C-137">C-137</option>
+          <option value="C-500A">C-500A</option>
+        </select>
+        <button type="submit">Registrarse</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Menú Inferior -->
+  <footer id="bottom-menu">
+    <button>Inicio</button>
+    <button>Buscar</button>
+    <button>Favoritos</button>
+    <button>Perfil</button>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+  
+</body>
+</html>
