@@ -25,16 +25,7 @@ window.addEventListener('load', () => {
     messagingSenderId: "996378141670",
     appId: "1:996378141670:web:f441b528bb30766e1f6c27"
   };
-  
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  
-  // Guardar registro en Firebase
-  function guardarRegistroEnFirebase(data) {
-    const userId = `user_${Date.now()}`;
-    set(ref(database, 'usuarios/' + userId), data);
-  }
-  
+    
   // Obtener personajes desde la API
   async function fetchCharacters(query = '', status = '') {
     try {
