@@ -17,9 +17,6 @@ window.addEventListener('load', () => {
   const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
   
   // Firebase (usa type="module" para que los imports funcionen)
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
-  
   const firebaseConfig = {
     apiKey: "AIzaSyBCJXeinurb2klueon_QMpwanb8uMy7s1E",
     authDomain: "rickandmorty-a77e9.firebaseapp.com",
