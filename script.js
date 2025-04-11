@@ -25,6 +25,28 @@ window.addEventListener('load', () => {
     messagingSenderId: "996378141670",
     appId: "1:996378141670:web:f441b528bb30766e1f6c27"
   };
+
+  function guardarRegistroEnFirebase(data) {
+    const userId = `user_${Date.now()}`;
+    set(ref(database, 'usuarios/' + userId), data)
+      .then(() => {
+        alert('Usuario registrado con éxito');
+        registerForm.reset();
+      })
+      .catch((error) => {
+        alert('Error al registrar usuario: ' + error.message);
+        console.error(error);
+      });
+  }
+  
+  // Asegúrate que este código esté dentro de window.load o después de definir la función
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(registerForm);
+    const userData = Object.fromEntries(formData.entries());
+    guardarRegistroEnFirebase(userData);
+  });
+  
     
   // Obtener personajes desde la API
   async function fetchCharacters(query = '', status = '') {
