@@ -70,7 +70,7 @@ const locationsContainer = document.getElementById("locations");
 const favoritesContainer = document.getElementById("favorites");
 
 let characters = [];
-let favorites = [];
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 async function fetchCharacters() {
   let url = "https://rickandmortyapi.com/api/character";
@@ -85,6 +85,21 @@ async function fetchCharacters() {
 
   characters = allCharacters;
   renderCharacters(characters);
+  renderFavorites();
+}
+
+function createCharacterCard(char, isFavorite) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <img src="${char.image}" alt="${char.name}" />
+    <h3>${char.name}</h3>
+    <p>${char.status}</p>
+    <button class="favorite-btn" data-id="${char.id}">${isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}</button>
+  `;
+
+  return card;
 }
 
 function renderCharacters(data) {
@@ -94,18 +109,8 @@ function renderCharacters(data) {
   grid.className = "character-grid";
 
   data.forEach((char) => {
-    const card = document.createElement("div");
-    card.className = "card";
-
     const isFavorite = favorites.includes(char.id);
-
-    card.innerHTML = `
-      <img src="${char.image}" alt="${char.name}" />
-      <h3>${char.name}</h3>
-      <p>${char.status}</p>
-      <button class="favorite-btn" data-id="${char.id}">${isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}</button>
-    `;
-
+    const card = createCharacterCard(char, isFavorite);
     grid.appendChild(card);
   });
 
@@ -122,6 +127,7 @@ function toggleFavorite(e) {
   } else {
     favorites.push(id);
   }
+  localStorage.setItem("favorites", JSON.stringify(favorites));
   renderCharacters(characters);
   renderFavorites();
 }
@@ -139,14 +145,9 @@ function renderFavorites() {
   grid.className = "character-grid";
 
   favChars.forEach((char) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${char.image}" alt="${char.name}" />
-      <h3>${char.name}</h3>
-      <p>${char.status}</p>
-      <button class="remove-favorite-btn" data-id="${char.id}">Eliminar de favoritos</button>
-    `;
+    const card = createCharacterCard(char, true);
+    card.querySelector(".favorite-btn").className = "remove-favorite-btn";
+    card.querySelector(".favorite-btn").textContent = "Eliminar de favoritos";
     grid.appendChild(card);
   });
 
@@ -156,6 +157,7 @@ function renderFavorites() {
     button.addEventListener("click", (e) => {
       const id = parseInt(e.target.dataset.id);
       favorites = favorites.filter(fav => fav !== id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
       renderCharacters(characters);
       renderFavorites();
     });
