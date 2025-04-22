@@ -10,6 +10,13 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>Bienvenido al mundo de Rick and Morty</h1>
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Navegación principal -->
   <nav id="main-nav">
     <ul>
       <li><a class="nav-link" href="#home">Inicio</a></li>
@@ -21,6 +28,7 @@
     </ul>
   </nav>
 
+  <!-- Filtro de búsqueda de personajes -->
   <section id="search-filter">
     <input type="text" id="search-input" placeholder="Buscar personaje..." />
     <select id="status-filter">
@@ -31,6 +39,7 @@
     </select>
   </section>
 
+  <!-- Contenido principal -->
   <main id="content">
     <section id="home">
       <h2>Bienvenido al multiverso de Rick and Morty</h2>
@@ -66,6 +75,7 @@
     </section>
   </main>
 
+  <!-- Menú inferior de navegación móvil -->
   <footer id="bottom-menu">
     <button>Inicio</button>
     <button>Buscar</button>
@@ -73,6 +83,7 @@
     <button>Perfil</button>
   </footer>
 
+  <!-- Script principal -->
   <script src="script.js"></script>
 </body>
 </html>
