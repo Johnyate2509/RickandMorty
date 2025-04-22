@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sections.forEach(section => section.classList.remove('active')); // Oculta todas
     let activeSectionId = window.location.hash || "#home"; // Por defecto, muestra #home
     let activeSection = document.querySelector(activeSectionId);
-    if (activeSection) activeSection.classList.add('active'); // Activa sección correspondiente
+    if (activeSection) activeSection.classList.add('active'); // Activa la sección correspondiente
 
     // Actualiza el estado visual del menú de navegación superior
     menuLinks.forEach(link => {
@@ -20,24 +20,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Mapa de texto a ID de secciones para el menú inferior
+  const sectionMap = {
+    'inicio': 'home',
+    'buscar': 'characters',
+    'favoritos': 'favorites',
+    'perfil': 'register'
+  };
 
-  // Asignar funcionalidad a los botones del menú inferior
+  // Funcionalidad de botones del menú inferior
   bottomMenuButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const sectionMap = {
-        'inicio': 'home',
-        'buscar': 'characters',
-        'favoritos': 'favorites',
-        'perfil': 'register'
-      };
-      const target = button.textContent.toLowerCase(); // Detecta texto del botón
-      const sectionId = sectionMap[target]; // Mapea a ID de sección
-      if (sectionId) window.location.hash = `#${sectionId}`; // Navega a la sección
+      const target = button.textContent.toLowerCase();
+      const sectionId = sectionMap[target];
+      if (sectionId) window.location.hash = `#${sectionId}`;
     });
   });
+
+  showActiveSection(); // Muestra sección inicial
+  window.addEventListener('hashchange', showActiveSection); // Cambio de sección al cambiar el hash
 });
-
-
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -53,21 +55,26 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// Referencias a elementos del DOM
+// Constantes y referencias DOM
+const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
+const LOCATIONS_API_URL = 'https://rickandmortyapi.com/api/location';
+const EPISODES_API_URL = 'https://rickandmortyapi.com/api/episode';
+
 const searchInput = document.getElementById('search-input');
 const statusFilter = document.getElementById('status-filter');
 const charactersSection = document.getElementById('characters');
 const favoritesSection = document.getElementById('favorites');
 const registerForm = document.getElementById('register-form');
-const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
+const locationsSection = document.getElementById('locations');
+const episodesSection = document.getElementById('episodes');
 
-// Guarda los datos del usuario registrado en Firebase
+// Función para guardar registros en Firebase
 function guardarRegistroEnFirebase(data) {
-  const userId = `user_${Date.now()}`; // ID único basado en timestamp
+  const userId = `user_${Date.now()}`;
   database.ref('usuarios/' + userId).set(data)
     .then(() => {
       alert('Usuario registrado con éxito');
-      registerForm.reset(); // Limpia el formulario
+      registerForm.reset();
     })
     .catch((error) => {
       alert('Error al registrar usuario: ' + error.message);
@@ -75,15 +82,15 @@ function guardarRegistroEnFirebase(data) {
     });
 }
 
-// Evento al enviar el formulario de registro
+// Evento del formulario de registro
 registerForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = new FormData(registerForm);
-  const userData = Object.fromEntries(formData.entries()); // Convierte a objeto
-  guardarRegistroEnFirebase(userData); // Guarda en Firebase
+  const userData = Object.fromEntries(formData.entries());
+  guardarRegistroEnFirebase(userData);
 });
 
-// Obtiene personajes desde la API con filtros de nombre y estado
+// Obtener personajes desde la API con filtros
 async function fetchCharacters(query = '', status = '') {
   try {
     const url = `${API_BASE_URL}/?name=${query}&status=${status}`;
@@ -95,14 +102,14 @@ async function fetchCharacters(query = '', status = '') {
       return;
     }
 
-    renderCharacters(data.results); // Muestra personajes
+    renderCharacters(data.results);
   } catch (error) {
     charactersSection.innerHTML = '<p>Error al cargar personajes.</p>';
     console.error(error);
   }
 }
 
-// Renderiza las tarjetas de personajes
+// Renderizar tarjetas de personajes
 function renderCharacters(characters) {
   charactersSection.innerHTML = characters.map(character => `
     <div class="card">
@@ -114,7 +121,7 @@ function renderCharacters(characters) {
   `).join('');
 }
 
-// Eventos del buscador y filtro por estado
+// Eventos del buscador y filtros
 searchInput.addEventListener('input', () => {
   fetchCharacters(searchInput.value, statusFilter.value);
 });
@@ -123,30 +130,30 @@ statusFilter.addEventListener('change', () => {
   fetchCharacters(searchInput.value, statusFilter.value);
 });
 
-// Devuelve el array de favoritos desde localStorage
+// LocalStorage: obtener favoritos
 function getFavorites() {
   return JSON.parse(localStorage.getItem('favorites')) || [];
 }
 
-// Agrega un personaje a favoritos y lo guarda en localStorage
+// Agregar a favoritos
 function addToFavorites(id) {
   const favorites = getFavorites();
   if (!favorites.includes(id)) {
     favorites.push(id);
     localStorage.setItem('favorites', JSON.stringify(favorites));
     alert('Agregado a favoritos');
-    loadFavorites(); // Actualiza lista
+    loadFavorites();
   }
 }
 
-// Elimina un personaje de favoritos
+// Eliminar de favoritos
 function removeFromFavorites(id) {
   const favorites = getFavorites().filter(fav => fav !== id);
   localStorage.setItem('favorites', JSON.stringify(favorites));
-  loadFavorites(); // Actualiza lista
+  loadFavorites();
 }
 
-// Carga y muestra los personajes favoritos
+// Cargar favoritos desde la API
 async function loadFavorites() {
   const ids = getFavorites();
   if (ids.length === 0) {
@@ -172,6 +179,71 @@ async function loadFavorites() {
   }
 }
 
-// Carga inicial de personajes y favoritos
+// Obtener episodios desde la API
+async function fetchEpisodes() {
+  try {
+    const response = await fetch(EPISODES_API_URL);
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      episodesSection.innerHTML = '<p>No se encontraron episodios.</p>';
+      return;
+    }
+
+    renderEpisodes(data.results);
+  } catch (error) {
+    episodesSection.innerHTML = '<p>Error al cargar episodios.</p>';
+    console.error(error);
+  }
+}
+
+// Renderizar episodios
+function renderEpisodes(episodes) {
+  episodesSection.innerHTML = episodes.map(ep => `
+    <div class="card">
+      <h3>${ep.name}</h3>
+      <p><strong>Fecha:</strong> ${ep.air_date}</p>
+      <p><strong>Episodio:</strong> ${ep.episode}</p>
+    </div>
+  `).join('');
+}
+
+// Obtener ubicaciones desde la API
+async function fetchLocations() {
+  try {
+    const response = await fetch(LOCATIONS_API_URL);
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      locationsSection.innerHTML = '<p>No se encontraron ubicaciones.</p>';
+      return;
+    }
+
+    renderLocations(data.results);
+  } catch (error) {
+    locationsSection.innerHTML = '<p>Error al cargar ubicaciones.</p>';
+    console.error(error);
+  }
+}
+
+// Renderizar ubicaciones
+function renderLocations(locations) {
+  locationsSection.innerHTML = locations.map(loc => `
+    <div class="card">
+      <h3>${loc.name}</h3>
+      <p><strong>Tipo:</strong> ${loc.type}</p>
+      <p><strong>Dimensión:</strong> ${loc.dimension}</p>
+    </div>
+  `).join('');
+}
+
+// Carga inicial
 fetchCharacters();
 loadFavorites();
+fetchEpisodes();
+fetchLocations();
+
+// Exponer funciones globalmente
+window.addToFavorites = addToFavorites;
+window.removeFromFavorites = removeFromFavorites;
+window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;
