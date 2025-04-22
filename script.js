@@ -175,17 +175,3 @@ async function loadFavorites() {
 // Carga inicial de personajes y favoritos
 fetchCharacters();
 loadFavorites();
-
-// Expone funciones para que puedan usarse en HTML dinámico
-window.addToFavorites = addToFavorites;
-window.removeFromFavorites = removeFromFavorites;
-window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;
-
-showActiveSection(); // Mostrar sección inicial
-window.addEventListener('hashchange', showActiveSection); // Cambiar sección al cambiar el hash
-
-// Oculta el splash screen una vez cargada la página
-window.addEventListener('load', () => {
-  const splash = document.getElementById('splash-screen');
-  if (splash) splash.style.display = 'none';
-});
