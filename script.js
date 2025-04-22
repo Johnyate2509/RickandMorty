@@ -1,23 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Obtener secciones y elementos del menú
   const sections = document.querySelectorAll('main section');
   const menuLinks = document.querySelectorAll('#main-nav ul li a');
   const bottomMenuButtons = document.querySelectorAll('#bottom-menu button');
-  document.body.style.backgroundColor = "#9dafac";
 
+  // Estilo del fondo al cargar
+  //document.body.style.backgroundColor = "#9dafac";
+
+  // Muestra solo la sección activa según el hash de la URL
   function showActiveSection() {
-    sections.forEach(section => section.classList.remove('active'));
-    let activeSectionId = window.location.hash || "#home";
+    sections.forEach(section => section.classList.remove('active')); // Oculta todas
+    let activeSectionId = window.location.hash || "#home"; // Por defecto, muestra #home
     let activeSection = document.querySelector(activeSectionId);
-    if (activeSection) activeSection.classList.add('active');
+    if (activeSection) activeSection.classList.add('active'); // Activa sección correspondiente
 
+    // Actualiza el estado visual del menú de navegación superior
     menuLinks.forEach(link => {
       link.classList.toggle("active", link.getAttribute("href") === activeSectionId);
     });
   }
 
-  showActiveSection();
-  window.addEventListener('hashchange', showActiveSection);
+ // showActiveSection(); // Mostrar sección inicial
+ // window.addEventListener('hashchange', showActiveSection); // Cambiar sección al cambiar el hash
 
+  // Asignar funcionalidad a los botones del menú inferior
   bottomMenuButtons.forEach(button => {
     button.addEventListener('click', () => {
       const sectionMap = {
@@ -26,19 +32,20 @@ document.addEventListener("DOMContentLoaded", function () {
         'favoritos': 'favorites',
         'perfil': 'register'
       };
-      const target = button.textContent.toLowerCase();
-      const sectionId = sectionMap[target];
-      if (sectionId) window.location.hash = `#${sectionId}`;
+      const target = button.textContent.toLowerCase(); // Detecta texto del botón
+      const sectionId = sectionMap[target]; // Mapea a ID de sección
+      if (sectionId) window.location.hash = `#${sectionId}`; // Navega a la sección
     });
   });
 });
 
+// Oculta el splash screen una vez cargada la página
 window.addEventListener('load', () => {
   const splash = document.getElementById('splash-screen');
   if (splash) splash.style.display = 'none';
 });
 
-// Firebase
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBCJXeinurb2klueon_QMpwanb8uMy7s1E",
   authDomain: "rickandmorty-a77e9.firebaseapp.com",
@@ -48,9 +55,11 @@ const firebaseConfig = {
   appId: "1:996378141670:web:f441b528bb30766e1f6c27"
 };
 
+// Inicializa Firebase y base de datos
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// Referencias a elementos del DOM
 const searchInput = document.getElementById('search-input');
 const statusFilter = document.getElementById('status-filter');
 const charactersSection = document.getElementById('characters');
@@ -58,12 +67,13 @@ const favoritesSection = document.getElementById('favorites');
 const registerForm = document.getElementById('register-form');
 const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
 
+// Guarda los datos del usuario registrado en Firebase
 function guardarRegistroEnFirebase(data) {
-  const userId = `user_${Date.now()}`;
+  const userId = `user_${Date.now()}`; // ID único basado en timestamp
   database.ref('usuarios/' + userId).set(data)
     .then(() => {
       alert('Usuario registrado con éxito');
-      registerForm.reset();
+      registerForm.reset(); // Limpia el formulario
     })
     .catch((error) => {
       alert('Error al registrar usuario: ' + error.message);
@@ -71,13 +81,15 @@ function guardarRegistroEnFirebase(data) {
     });
 }
 
+// Evento al enviar el formulario de registro
 registerForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const formData = new FormData(registerForm);
-  const userData = Object.fromEntries(formData.entries());
-  guardarRegistroEnFirebase(userData);
+  const userData = Object.fromEntries(formData.entries()); // Convierte a objeto
+  guardarRegistroEnFirebase(userData); // Guarda en Firebase
 });
 
+// Obtiene personajes desde la API con filtros de nombre y estado
 async function fetchCharacters(query = '', status = '') {
   try {
     const url = `${API_BASE_URL}/?name=${query}&status=${status}`;
@@ -89,13 +101,14 @@ async function fetchCharacters(query = '', status = '') {
       return;
     }
 
-    renderCharacters(data.results);
+    renderCharacters(data.results); // Muestra personajes
   } catch (error) {
     charactersSection.innerHTML = '<p>Error al cargar personajes.</p>';
     console.error(error);
   }
 }
 
+// Renderiza las tarjetas de personajes
 function renderCharacters(characters) {
   charactersSection.innerHTML = characters.map(character => `
     <div class="card">
@@ -107,6 +120,7 @@ function renderCharacters(characters) {
   `).join('');
 }
 
+// Eventos del buscador y filtro por estado
 searchInput.addEventListener('input', () => {
   fetchCharacters(searchInput.value, statusFilter.value);
 });
@@ -115,26 +129,30 @@ statusFilter.addEventListener('change', () => {
   fetchCharacters(searchInput.value, statusFilter.value);
 });
 
+// Devuelve el array de favoritos desde localStorage
 function getFavorites() {
   return JSON.parse(localStorage.getItem('favorites')) || [];
 }
 
+// Agrega un personaje a favoritos y lo guarda en localStorage
 function addToFavorites(id) {
   const favorites = getFavorites();
   if (!favorites.includes(id)) {
     favorites.push(id);
     localStorage.setItem('favorites', JSON.stringify(favorites));
     alert('Agregado a favoritos');
-    loadFavorites();
+    loadFavorites(); // Actualiza lista
   }
 }
 
+// Elimina un personaje de favoritos
 function removeFromFavorites(id) {
   const favorites = getFavorites().filter(fav => fav !== id);
   localStorage.setItem('favorites', JSON.stringify(favorites));
-  loadFavorites();
+  loadFavorites(); // Actualiza lista
 }
 
+// Carga y muestra los personajes favoritos
 async function loadFavorites() {
   const ids = getFavorites();
   if (ids.length === 0) {
@@ -160,8 +178,11 @@ async function loadFavorites() {
   }
 }
 
+// Carga inicial de personajes y favoritos
 fetchCharacters();
 loadFavorites();
+
+// Expone funciones para que puedan usarse en HTML dinámico
 window.addToFavorites = addToFavorites;
 window.removeFromFavorites = removeFromFavorites;
 window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;
