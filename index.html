@@ -6,15 +6,22 @@
   <title>Rick and Morty Web</title>
   <link rel="icon" href="./favicon.ico" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
+
 <body>
- <!--  <div id="splash-screen">
+  <!-- Splash opcional (comentado por ahora) -->
+  <!--
+  <div id="splash-screen">
     <h1>Rick and Morty</h1>
     <p>Cargando...</p>
-  </div> -->
+  </div>
+  -->
 
+  <!-- Navegación principal superior -->
   <nav id="main-nav">
     <ul>
       <li><a href="#home">Inicio</a></li>
@@ -26,6 +33,7 @@
     </ul>
   </nav>
 
+  <!-- Buscador de personajes -->
   <section id="search-filter">
     <input type="text" id="search-input" placeholder="Buscar personaje..." />
     <select id="status-filter">
@@ -36,23 +44,33 @@
     </select>
   </section>
 
+  <!-- Contenido principal dividido por secciones -->
   <main id="content">
-    <section id="home">
+    
+    <!-- Sección de inicio (activa por defecto) -->
+    <section id="home" class="active">
       <h2>Bienvenido al multiverso de Rick and Morty</h2>
     </section>
 
+    <!-- Sección para mostrar personajes desde la API -->
     <section id="characters"></section>
 
+    <!-- Sección para mostrar episodios desde la API -->
     <section id="episodes">
-      <h2>Lista de Episodios (en construcción)</h2>
+      <h2>Lista de Episodios</h2>
+      <!-- El contenido se llenará dinámicamente con JS -->
     </section>
 
+    <!-- Sección para mostrar ubicaciones desde la API -->
     <section id="locations">
-      <h2>Lista de Ubicaciones (en construcción)</h2>
+      <h2>Lista de Ubicaciones</h2>
+      <!-- El contenido se llenará dinámicamente con JS -->
     </section>
 
+    <!-- Sección de personajes favoritos desde localStorage -->
     <section id="favorites"></section>
 
+    <!-- Sección de formulario de registro de usuarios -->
     <section id="register">
       <form id="register-form">
         <input type="text" name="nombre" placeholder="Nombre" required />
@@ -71,6 +89,7 @@
     </section>
   </main>
 
+  <!-- Menú inferior para navegación rápida -->
   <footer id="bottom-menu">
     <button>Inicio</button>
     <button>Buscar</button>
@@ -78,6 +97,7 @@
     <button>Perfil</button>
   </footer>
 
+  <!-- Script principal con toda la lógica de la app -->
   <script src="main.js"></script>
 </body>
 </html>
