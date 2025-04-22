@@ -1,30 +1,35 @@
-// Esperar a que el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", function () {
-  // === NAVEGACIÓN ENTRE SECCIONES ===
-  const sections = document.querySelectorAll('main section');
-  const menuLinks = document.querySelectorAll('#main-nav ul li a');
-  const bottomMenuButtons = document.querySelectorAll('#bottom-menu button');
+// main.js
 
+// Esperar a que el DOM cargue completamente
+document.addEventListener("DOMContentLoaded", function () {
+  const sections = document.querySelectorAll("main section");
+  const menuLinks = document.querySelectorAll(".nav-link");
+  const bottomMenuButtons = document.querySelectorAll("#bottom-menu button");
+
+  // Estilo de fondo inicial
   document.body.style.backgroundColor = "#9dafac";
 
+  // Mostrar la sección activa según el hash en la URL
   function showActiveSection() {
-    sections.forEach(section => section.classList.remove('active'));
+    sections.forEach((section) => section.classList.remove("active"));
     let activeSectionId = window.location.hash || "#home";
     let activeSection = document.querySelector(activeSectionId);
-    if (activeSection) activeSection.classList.add('active');
+    if (activeSection) activeSection.classList.add("active");
 
-    menuLinks.forEach(link => {
+    // Resaltar link activo en la navegación
+    menuLinks.forEach((link) => {
       link.classList.toggle("active", link.getAttribute("href") === activeSectionId);
     });
   }
 
-  bottomMenuButtons.forEach(button => {
-    button.addEventListener('click', () => {
+  // Mapeo de botones del menú inferior a secciones
+  bottomMenuButtons.forEach((button) => {
+    button.addEventListener("click", () => {
       const sectionMap = {
-        'inicio': 'home',
-        'buscar': 'characters',
-        'favoritos': 'favorites',
-        'perfil': 'register'
+        inicio: "home",
+        buscar: "characters",
+        favoritos: "favorites",
+        perfil: "register",
       };
       const target = button.textContent.toLowerCase();
       const sectionId = sectionMap[target];
@@ -32,190 +37,186 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  window.addEventListener('hashchange', showActiveSection);
   showActiveSection();
+  window.addEventListener("hashchange", showActiveSection);
 });
 
-// === FIREBASE ===
+// Firebase Configuración
 const firebaseConfig = {
   apiKey: "AIzaSyBCJXeinurb2klueon_QMpwanb8uMy7s1E",
   authDomain: "rickandmorty-a77e9.firebaseapp.com",
   projectId: "rickandmorty-a77e9",
   storageBucket: "rickandmorty-a77e9.appspot.com",
   messagingSenderId: "996378141670",
-  appId: "1:996378141670:web:f441b528bb30766e1f6c27"
+  appId: "1:996378141670:web:f441b528bb30766e1f6c27",
 };
 
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// === ELEMENTOS DEL DOM ===
-const searchInput = document.getElementById('search-input');
-const statusFilter = document.getElementById('status-filter');
-const charactersSection = document.getElementById('characters');
-const episodesSection = document.getElementById('episodes');
-const locationsSection = document.getElementById('locations');
-const favoritesSection = document.getElementById('favorites');
-const registerForm = document.getElementById('register-form');
+// Elementos del DOM necesarios
+const searchInput = document.getElementById("search-input");
+const statusFilter = document.getElementById("status-filter");
+const charactersContainer = document.getElementById("characters");
+const favoritesContainer = document.getElementById("favorites");
+const episodesContainer = document.getElementById("episodes");
+const locationsContainer = document.getElementById("locations");
+const registerForm = document.getElementById("register-form");
 
-// === URLs BASE ===
-const API_BASE = 'https://rickandmortyapi.com/api';
+// Endpoints de la API de Rick and Morty
+const API_BASE = {
+  characters: "https://rickandmortyapi.com/api/character",
+  locations: "https://rickandmortyapi.com/api/location",
+  episodes: "https://rickandmortyapi.com/api/episode",
+};
 
-// === FUNCIONES DE PERSONAJES ===
-async function fetchCharacters(query = '', status = '') {
+// Registro de usuario con Firebase
+if (registerForm) {
+  registerForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(registerForm);
+    const userData = Object.fromEntries(formData.entries());
+    const userId = `user_${Date.now()}`;
+
+    database
+      .ref("usuarios/" + userId)
+      .set(userData)
+      .then(() => {
+        alert("Usuario registrado con éxito");
+        registerForm.reset();
+      })
+      .catch((error) => {
+        alert("Error al registrar usuario: " + error.message);
+      });
+  });
+}
+
+// Función para obtener personajes desde la API
+async function fetchCharacters(query = "", status = "") {
   try {
-    const response = await fetch(`${API_BASE}/character/?name=${query}&status=${status}`);
+    const url = `${API_BASE.characters}/?name=${query}&status=${status}`;
+    const response = await fetch(url);
     const data = await response.json();
-    if (!data.results || data.results.length === 0) {
-      charactersSection.innerHTML = '<p>No se encontraron personajes.</p>';
+
+    if (!data.results) {
+      charactersContainer.innerHTML = "<p>No se encontraron personajes.</p>";
       return;
     }
     renderCharacters(data.results);
   } catch (error) {
-    charactersSection.innerHTML = '<p>Error al cargar personajes.</p>';
-    console.error(error);
+    charactersContainer.innerHTML = "<p>Error al cargar personajes.</p>";
   }
 }
 
+// Mostrar tarjetas de personajes
 function renderCharacters(characters) {
-  charactersSection.innerHTML = characters.map(character => `
+  charactersContainer.innerHTML = characters
+    .map(
+      (c) => `
     <div class="card">
-      <img src="${character.image}" alt="${character.name}" />
-      <h3>${character.name}</h3>
-      <p>${character.status}</p>
-      <button onclick="addToFavorites(${character.id})">Agregar a Favoritos</button>
-    </div>
-  `).join('');
+      <img src="${c.image}" alt="${c.name}" />
+      <h3>${c.name}</h3>
+      <p>${c.status}</p>
+      <button onclick="addToFavorites(${c.id})">Agregar a Favoritos</button>
+    </div>`
+    )
+    .join("");
 }
 
-// === FUNCIONES DE EPISODIOS ===
-async function fetchEpisodes() {
-  try {
-    const response = await fetch(`${API_BASE}/episode`);
-    const data = await response.json();
-    renderEpisodes(data.results);
-  } catch (error) {
-    episodesSection.innerHTML += '<p>Error al cargar episodios.</p>';
-    console.error(error);
-  }
-}
-
-function renderEpisodes(episodes) {
-  episodesSection.innerHTML = episodes.map(episode => `
-    <div class="card">
-      <h3>${episode.name}</h3>
-      <p>Fecha: ${episode.air_date}</p>
-      <p>Episodio: ${episode.episode}</p>
-    </div>
-  `).join('');
-}
-
-// === FUNCIONES DE UBICACIONES ===
-async function fetchLocations() {
-  try {
-    const response = await fetch(`${API_BASE}/location`);
-    const data = await response.json();
-    renderLocations(data.results);
-  } catch (error) {
-    locationsSection.innerHTML += '<p>Error al cargar ubicaciones.</p>';
-    console.error(error);
-  }
-}
-
-function renderLocations(locations) {
-  locationsSection.innerHTML = locations.map(location => `
-    <div class="card">
-      <h3>${location.name}</h3>
-      <p>Tipo: ${location.type}</p>
-      <p>Dimensión: ${location.dimension}</p>
-    </div>
-  `).join('');
-}
-
-// === FAVORITOS ===
+// Obtener favoritos del localStorage
 function getFavorites() {
-  return JSON.parse(localStorage.getItem('favorites')) || [];
+  return JSON.parse(localStorage.getItem("favorites")) || [];
 }
 
+// Agregar personaje a favoritos
 function addToFavorites(id) {
   const favorites = getFavorites();
   if (!favorites.includes(id)) {
     favorites.push(id);
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    alert('Agregado a favoritos');
+    localStorage.setItem("favorites", JSON.stringify(favorites));
     loadFavorites();
   }
 }
 
+// Quitar personaje de favoritos
 function removeFromFavorites(id) {
-  const favorites = getFavorites().filter(fav => fav !== id);
-  localStorage.setItem('favorites', JSON.stringify(favorites));
+  const updated = getFavorites().filter((fid) => fid !== id);
+  localStorage.setItem("favorites", JSON.stringify(updated));
   loadFavorites();
 }
 
+// Cargar favoritos
 async function loadFavorites() {
   const ids = getFavorites();
   if (ids.length === 0) {
-    favoritesSection.innerHTML = '<p>No hay favoritos aún.</p>';
+    favoritesContainer.innerHTML = "<p>No hay favoritos aún.</p>";
     return;
   }
 
   try {
-    const response = await fetch(`${API_BASE}/character/${ids.join(',')}`);
+    const response = await fetch(`${API_BASE.characters}/${ids.join(",")}`);
     const data = await response.json();
-    const characters = Array.isArray(data) ? data : [data];
+    const results = Array.isArray(data) ? data : [data];
 
-    favoritesSection.innerHTML = characters.map(character => `
+    favoritesContainer.innerHTML = results
+      .map(
+        (c) => `
       <div class="card">
-        <img src="${character.image}" alt="${character.name}" />
-        <h3>${character.name}</h3>
-        <p>${character.status}</p>
-        <button onclick="removeFromFavorites(${character.id})">Eliminar</button>
-      </div>
-    `).join('');
+        <img src="${c.image}" alt="${c.name}" />
+        <h3>${c.name}</h3>
+        <p>${c.status}</p>
+        <button onclick="removeFromFavorites(${c.id})">Eliminar</button>
+      </div>`
+      )
+      .join("");
   } catch (error) {
-    favoritesSection.innerHTML = '<p>Error al cargar favoritos.</p>';
-    console.error(error);
+    favoritesContainer.innerHTML = "<p>Error al cargar favoritos.</p>";
   }
 }
 
-// === REGISTRO DE USUARIO ===
-function guardarRegistroEnFirebase(data) {
-  const userId = `user_${Date.now()}`;
-  database.ref('usuarios/' + userId).set(data)
-    .then(() => {
-      alert('Usuario registrado con éxito');
-      registerForm.reset();
-    })
-    .catch((error) => {
-      alert('Error al registrar usuario: ' + error.message);
-      console.error(error);
-    });
+// Obtener lista de episodios
+async function fetchEpisodes() {
+  try {
+    const response = await fetch(API_BASE.episodes);
+    const data = await response.json();
+    episodesContainer.innerHTML = data.results
+      .map((ep) => `<p><strong>${ep.name}</strong> - ${ep.episode}</p>`) 
+      .join("");
+  } catch (error) {
+    episodesContainer.innerHTML = "<p>Error al cargar episodios.</p>";
+  }
 }
 
-registerForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const formData = new FormData(registerForm);
-  const userData = Object.fromEntries(formData.entries());
-  guardarRegistroEnFirebase(userData);
-});
+// Obtener lista de ubicaciones
+async function fetchLocations() {
+  try {
+    const response = await fetch(API_BASE.locations);
+    const data = await response.json();
+    locationsContainer.innerHTML = data.results
+      .map((loc) => `<p><strong>${loc.name}</strong> - ${loc.type}</p>`) 
+      .join("");
+  } catch (error) {
+    locationsContainer.innerHTML = "<p>Error al cargar ubicaciones.</p>";
+  }
+}
 
-// === EVENTOS PARA FILTROS DE BÚSQUEDA ===
-searchInput.addEventListener('input', () => {
-  fetchCharacters(searchInput.value, statusFilter.value);
-});
+// Eventos del buscador y filtro
+if (searchInput && statusFilter) {
+  searchInput.addEventListener("input", () => {
+    fetchCharacters(searchInput.value, statusFilter.value);
+  });
 
-statusFilter.addEventListener('change', () => {
-  fetchCharacters(searchInput.value, statusFilter.value);
-});
+  statusFilter.addEventListener("change", () => {
+    fetchCharacters(searchInput.value, statusFilter.value);
+  });
+}
 
-// === LLAMADAS INICIALES ===
+// Llamadas iniciales
 fetchCharacters();
 fetchEpisodes();
 fetchLocations();
 loadFavorites();
 
-// === FUNCIONES DISPONIBLES GLOBALMENTE ===
+// Exponer funciones a window para uso en botones inline
 window.addToFavorites = addToFavorites;
 window.removeFromFavorites = removeFromFavorites;
-window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;

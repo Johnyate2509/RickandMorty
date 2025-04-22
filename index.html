@@ -6,34 +6,21 @@
   <title>Rick and Morty Web</title>
   <link rel="icon" href="./favicon.ico" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
-
 <body>
-  <!-- Splash opcional (comentado por ahora) -->
-  <!--
-  <div id="splash-screen">
-    <h1>Rick and Morty</h1>
-    <p>Cargando...</p>
-  </div>
-  -->
-
-  <!-- Navegación principal superior -->
   <nav id="main-nav">
     <ul>
-      <li><a href="#home">Inicio</a></li>
-      <li><a href="#characters">Personajes</a></li>
-      <li><a href="#episodes">Episodios</a></li>
-      <li><a href="#locations">Ubicaciones</a></li>
-      <li><a href="#favorites">Favoritos</a></li>
-      <li><a href="#register">Registro</a></li>
+      <li><a href="#home" class="nav-link">Inicio</a></li>
+      <li><a href="#characters" class="nav-link">Personajes</a></li>
+      <li><a href="#episodes" class="nav-link">Episodios</a></li>
+      <li><a href="#locations" class="nav-link">Ubicaciones</a></li>
+      <li><a href="#favorites" class="nav-link">Favoritos</a></li>
+      <li><a href="#register" class="nav-link">Registro</a></li>
     </ul>
   </nav>
 
-  <!-- Buscador de personajes -->
   <section id="search-filter">
     <input type="text" id="search-input" placeholder="Buscar personaje..." />
     <select id="status-filter">
@@ -44,33 +31,31 @@
     </select>
   </section>
 
-  <!-- Contenido principal dividido por secciones -->
   <main id="content">
-    
-    <!-- Sección de inicio (activa por defecto) -->
     <section id="home" class="active">
       <h2>Bienvenido al multiverso de Rick and Morty</h2>
     </section>
 
-    <!-- Sección para mostrar personajes desde la API -->
-    <section id="characters"></section>
+    <section id="characters">
+      <h2>Personajes</h2>
+      <div id="characters-list"></div>
+    </section>
 
-    <!-- Sección para mostrar episodios desde la API -->
     <section id="episodes">
       <h2>Lista de Episodios</h2>
-      <!-- El contenido se llenará dinámicamente con JS -->
+      <div id="episodes-list"></div>
     </section>
 
-    <!-- Sección para mostrar ubicaciones desde la API -->
     <section id="locations">
       <h2>Lista de Ubicaciones</h2>
-      <!-- El contenido se llenará dinámicamente con JS -->
+      <div id="locations-list"></div>
     </section>
 
-    <!-- Sección de personajes favoritos desde localStorage -->
-    <section id="favorites"></section>
+    <section id="favorites">
+      <h2>Favoritos</h2>
+      <div id="favorites-list"></div>
+    </section>
 
-    <!-- Sección de formulario de registro de usuarios -->
     <section id="register">
       <form id="register-form">
         <input type="text" name="nombre" placeholder="Nombre" required />
@@ -89,7 +74,6 @@
     </section>
   </main>
 
-  <!-- Menú inferior para navegación rápida -->
   <footer id="bottom-menu">
     <button>Inicio</button>
     <button>Buscar</button>
@@ -97,7 +81,6 @@
     <button>Perfil</button>
   </footer>
 
-  <!-- Script principal con toda la lógica de la app -->
-  <script src="main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

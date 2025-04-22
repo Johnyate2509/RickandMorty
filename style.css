@@ -16,23 +16,7 @@ main section.active {
   display: block;
 }
 
-/* Splash Screen */
-#splash-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  z-index: 9999;
-}
-
-/* Navegación */
+/* Navegación principal */
 #main-nav ul {
   display: flex;
   justify-content: space-around;
@@ -48,29 +32,28 @@ main section.active {
   padding: 10px;
 }
 
-#main-nav ul li a:hover {
-  background-color: #555;
-  border-radius: 5px;
-}
-
+#main-nav ul li a:hover,
 #main-nav ul li a.active {
   background-color: #00ff00;
   border-radius: 5px;
+  color: #000;
 }
 
-/* Buscador y filtro */
+/* Sección de búsqueda y filtros */
 #search-filter {
   display: flex;
   justify-content: center;
   gap: 10px;
   padding: 20px;
   background-color: #222;
+  flex-wrap: wrap;
 }
 
 #search-input, #status-filter {
   padding: 10px;
   border-radius: 5px;
   border: none;
+  min-width: 200px;
 }
 
 /* Tarjetas de personajes */
@@ -82,6 +65,11 @@ main section.active {
   text-align: center;
   max-width: 200px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
 }
 
 .card img {
@@ -114,6 +102,11 @@ main section.active {
   border-radius: 5px;
 }
 
+/* Secciones generales */
+#episodes, #locations {
+  padding: 20px;
+}
+
 /* Menú inferior */
 #bottom-menu {
   position: fixed;
@@ -123,6 +116,7 @@ main section.active {
   justify-content: space-around;
   background-color: #111;
   padding: 10px;
+  z-index: 1000;
 }
 
 #bottom-menu button {
@@ -130,6 +124,7 @@ main section.active {
   border: none;
   color: white;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 #bottom-menu button:hover {
@@ -144,5 +139,9 @@ main section.active {
 
   #register-form {
     width: 90%;
+  }
+
+  #search-filter {
+    flex-direction: column;
   }
 }
