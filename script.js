@@ -1,5 +1,14 @@
 // main.js
 
+    // Splash screen ocultar después de 5 segundos
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        splash.style.opacity = "0";
+        splash.style.visibility = "hidden";
+      }, 5000);
+    });
+
 // Esperar a que el DOM cargue completamente
 document.addEventListener("DOMContentLoaded", function () {
   const sections = document.querySelectorAll("main section");
