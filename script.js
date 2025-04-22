@@ -145,11 +145,21 @@ function renderFavorites() {
       <img src="${char.image}" alt="${char.name}" />
       <h3>${char.name}</h3>
       <p>${char.status}</p>
+      <button class="remove-favorite-btn" data-id="${char.id}">Eliminar de favoritos</button>
     `;
     grid.appendChild(card);
   });
 
   favoritesContainer.appendChild(grid);
+
+  document.querySelectorAll(".remove-favorite-btn").forEach(button => {
+    button.addEventListener("click", (e) => {
+      const id = parseInt(e.target.dataset.id);
+      favorites = favorites.filter(fav => fav !== id);
+      renderCharacters(characters);
+      renderFavorites();
+    });
+  });
 }
 
 function applyFilters() {
