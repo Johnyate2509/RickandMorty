@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rick and Morty App</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rick and Morty Web</title>
+  <link rel="icon" href="./favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
+  <!-- Splash Screen -->
   <div id="splash-screen">
-    <h1>Bienvenido a Rick and Morty</h1>
+    <h1>Bienvenido al mundo de Rick and Morty</h1>
+    <p>Cargando...</p>
   </div>
 
-  <nav>
-    <a class="nav-link" href="#home">Inicio</a>
-    <a class="nav-link" href="#characters">Buscar</a>
-    <a class="nav-link" href="#favorites">Favoritos</a>
-    <a class="nav-link" href="#register">Perfil</a>
+  <!-- Navegación principal -->
+  <nav id="main-nav">
+    <ul>
+      <li><a class="nav-link" href="#home">Inicio</a></li>
+      <li><a class="nav-link" href="#characters">Personajes</a></li>
+      <li><a class="nav-link" href="#episodes">Episodios</a></li>
+      <li><a class="nav-link" href="#locations">Ubicaciones</a></li>
+      <li><a class="nav-link" href="#favorites">Favoritos</a></li>
+      <li><a class="nav-link" href="#register">Registro</a></li>
+    </ul>
   </nav>
 
-  <main>
+  <!-- Filtro de búsqueda de personajes -->
+  <section id="search-filter">
+    <input type="text" id="search-input" placeholder="Buscar personaje..." />
+    <select id="status-filter">
+      <option value="">Todos</option>
+      <option value="alive">Vivo</option>
+      <option value="dead">Muerto</option>
+      <option value="unknown">Desconocido</option>
+    </select>
+  </section>
+
+  <!-- Contenido principal -->
+  <main id="content">
     <section id="home">
-      <h2>Inicio</h2>
-      <p>Bienvenido a la app de Rick and Morty.</p>
+      <h2>Bienvenido al multiverso de Rick and Morty</h2>
+      <p>Explora personajes, episodios y ubicaciones del universo interdimensional.</p>
     </section>
 
     <section id="characters">
-      <h2>Buscar Personajes</h2>
-      <input id="search-input" type="text" placeholder="Buscar por nombre...">
-      <select id="status-filter">
-        <option value="">Todos</option>
-        <option value="alive">Vivo</option>
-        <option value="dead">Muerto</option>
-        <option value="unknown">Desconocido</option>
-      </select>
-      <div id="characters"></div>
-    </section>
-
-    <section id="favorites">
-      <!-- El contenido se genera dinámicamente desde JS -->
-    </section>
-
-    <section id="register">
-      <h2>Perfil</h2>
-      <p>Información del usuario o inicio de sesión.</p>
+      <h2>Personajes</h2>
+      <!-- Contenido dinámico desde JS -->
     </section>
 
     <section id="episodes">
-      <h2>Episodios</h2>
+      <h2>Lista de Episodios</h2>
+      <div id="episodes-container" class="episode-list">
+        <!-- Episodios se insertarán dinámicamente aquí -->
+      </div>
     </section>
 
     <section id="locations">
-      <h2>Ubicaciones</h2>
+      <h2>Lista de Ubicaciones</h2>
+      <div id="locations-container" class="location-list">
+        <!-- Ubicaciones se insertarán dinámicamente aquí -->
+      </div>
+    </section>
+
+    <section id="favorites">
+      <!-- Contenido dinámico desde JS -->
+    </section>
+
+    <section id="register">
+      <form id="register-form">
+        <input type="text" name="nombre" placeholder="Nombre" required />
+        <input type="text" name="apellido" placeholder="Apellido" required />
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <input type="text" name="usuario" placeholder="Nombre de usuario" required />
+        <input type="date" name="fecha_nacimiento" required />
+        <select name="universo" required>
+          <option value="">Elige un universo</option>
+          <option value="C-137">C-137</option>
+          <option value="C-500A">C-500A</option>
+        </select>
+        <button type="submit">Registrarse</button>
+      </form>
     </section>
   </main>
 
+  <!-- Menú inferior de navegación móvil -->
   <footer id="bottom-menu">
     <button>Inicio</button>
     <button>Buscar</button>
@@ -61,6 +95,7 @@
     <button>Perfil</button>
   </footer>
 
+  <!-- Script principal -->
   <script src="script.js"></script>
 </body>
 </html>

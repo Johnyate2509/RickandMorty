@@ -1,10 +1,5 @@
 // Archivo: main.js
 
-// Firebase configuración y lógica (si ya está configurado en otro lugar, omitir esta parte)
-// const firebaseConfig = { ... };
-// firebase.initializeApp(firebaseConfig);
-// const database = firebase.database();
-
 // --- Splash screen ocultar después de 5 segundos ---
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -85,7 +80,7 @@ async function fetchCharacters() {
 
   characters = allCharacters;
   renderCharacters(characters);
-  renderFavorites();
+  renderFavorites(); // Aseguramos que se llama solo cuando characters ya tiene datos
 }
 
 function createCharacterCard(char, isFavorite) {
@@ -96,7 +91,9 @@ function createCharacterCard(char, isFavorite) {
     <img src="${char.image}" alt="${char.name}" />
     <h3>${char.name}</h3>
     <p>${char.status}</p>
-    <button class="favorite-btn" data-id="${char.id}">${isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}</button>
+    <button class="favorite-btn" data-id="${char.id}">
+      ${isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}
+    </button>
   `;
 
   return card;
@@ -115,6 +112,7 @@ function renderCharacters(data) {
   });
 
   characterContainer.appendChild(grid);
+
   document.querySelectorAll(".favorite-btn").forEach(button => {
     button.addEventListener("click", toggleFavorite);
   });
@@ -127,12 +125,15 @@ function toggleFavorite(e) {
   } else {
     favorites.push(id);
   }
+
   localStorage.setItem("favorites", JSON.stringify(favorites));
+  console.log("Favoritos actualizados:", favorites);
   renderCharacters(characters);
   renderFavorites();
 }
 
 function renderFavorites() {
+  console.log("Renderizando favoritos:", favorites);
   favoritesContainer.innerHTML = "<h2>Favoritos</h2>";
   const favChars = characters.filter(c => favorites.includes(c.id));
 
@@ -146,8 +147,9 @@ function renderFavorites() {
 
   favChars.forEach((char) => {
     const card = createCharacterCard(char, true);
-    card.querySelector(".favorite-btn").className = "remove-favorite-btn";
-    card.querySelector(".favorite-btn").textContent = "Eliminar de favoritos";
+    const btn = card.querySelector(".favorite-btn");
+    btn.className = "remove-favorite-btn";
+    btn.textContent = "Eliminar de favoritos";
     grid.appendChild(card);
   });
 
@@ -181,6 +183,7 @@ function applyFilters() {
 searchInput.addEventListener("input", applyFilters);
 statusFilter.addEventListener("change", applyFilters);
 
+// Inicia carga principal
 fetchCharacters();
 
 // --- Cargar episodios y ubicaciones ---
@@ -196,7 +199,11 @@ async function fetchEpisodes() {
   }
 
   episodesContainer.innerHTML += "<div class='episode-list'>" +
-    allEpisodes.map(ep => `<div class='card'><h3>${ep.name}</h3><p>${ep.episode}</p></div>`).join("") +
+    allEpisodes.map(ep => `
+      <div class='card episode-content'>
+        <h3>${ep.name}</h3>
+        <p>${ep.episode}</p>
+      </div>`).join("") +
     "</div>";
 }
 
@@ -212,7 +219,11 @@ async function fetchLocations() {
   }
 
   locationsContainer.innerHTML += "<div class='location-list'>" +
-    allLocations.map(loc => `<div class='card'><h3>${loc.name}</h3><p>${loc.type} - ${loc.dimension}</p></div>`).join("") +
+    allLocations.map(loc => `
+      <div class='card location-content'>
+        <h3>${loc.name}</h3>
+        <p>${loc.type} - ${loc.dimension}</p>
+      </div>`).join("") +
     "</div>";
 }
 
