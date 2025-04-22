@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const bottomMenuButtons = document.querySelectorAll('#bottom-menu button');
 
   // Estilo del fondo al cargar
-  //document.body.style.backgroundColor = "#9dafac";
+  document.body.style.backgroundColor = "#9dafac";
 
   // Muestra solo la sección activa según el hash de la URL
   function showActiveSection() {
@@ -20,8 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
- // showActiveSection(); // Mostrar sección inicial
- // window.addEventListener('hashchange', showActiveSection); // Cambiar sección al cambiar el hash
 
   // Asignar funcionalidad a los botones del menú inferior
   bottomMenuButtons.forEach(button => {
@@ -39,11 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Oculta el splash screen una vez cargada la página
-window.addEventListener('load', () => {
-  const splash = document.getElementById('splash-screen');
-  if (splash) splash.style.display = 'none';
-});
+
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -186,3 +180,12 @@ loadFavorites();
 window.addToFavorites = addToFavorites;
 window.removeFromFavorites = removeFromFavorites;
 window.guardarRegistroEnFirebase = guardarRegistroEnFirebase;
+
+showActiveSection(); // Mostrar sección inicial
+window.addEventListener('hashchange', showActiveSection); // Cambiar sección al cambiar el hash
+
+// Oculta el splash screen una vez cargada la página
+window.addEventListener('load', () => {
+  const splash = document.getElementById('splash-screen');
+  if (splash) splash.style.display = 'none';
+});
