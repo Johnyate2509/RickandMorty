@@ -65,8 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
 const characterContainer = document.getElementById("characters");
 const searchInput = document.getElementById("search-input");
 const statusFilter = document.getElementById("status-filter");
+const episodesContainer = document.getElementById("episodes");
+const locationsContainer = document.getElementById("locations");
+const favoritesContainer = document.getElementById("favorites");
 
 let characters = [];
+let favorites = [];
 
 async function fetchCharacters() {
   let url = "https://rickandmortyapi.com/api/character";
@@ -86,18 +90,66 @@ async function fetchCharacters() {
 function renderCharacters(data) {
   characterContainer.innerHTML = "";
 
+  const grid = document.createElement("div");
+  grid.className = "character-grid";
+
   data.forEach((char) => {
     const card = document.createElement("div");
     card.className = "card";
+
+    const isFavorite = favorites.includes(char.id);
 
     card.innerHTML = `
       <img src="${char.image}" alt="${char.name}" />
       <h3>${char.name}</h3>
       <p>${char.status}</p>
+      <button class="favorite-btn" data-id="${char.id}">${isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}</button>
     `;
 
-    characterContainer.appendChild(card);
+    grid.appendChild(card);
   });
+
+  characterContainer.appendChild(grid);
+  document.querySelectorAll(".favorite-btn").forEach(button => {
+    button.addEventListener("click", toggleFavorite);
+  });
+}
+
+function toggleFavorite(e) {
+  const id = parseInt(e.target.dataset.id);
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(fav => fav !== id);
+  } else {
+    favorites.push(id);
+  }
+  renderCharacters(characters);
+  renderFavorites();
+}
+
+function renderFavorites() {
+  favoritesContainer.innerHTML = "<h2>Favoritos</h2>";
+  const favChars = characters.filter(c => favorites.includes(c.id));
+
+  if (favChars.length === 0) {
+    favoritesContainer.innerHTML += "<p>No hay favoritos aún.</p>";
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "character-grid";
+
+  favChars.forEach((char) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${char.image}" alt="${char.name}" />
+      <h3>${char.name}</h3>
+      <p>${char.status}</p>
+    `;
+    grid.appendChild(card);
+  });
+
+  favoritesContainer.appendChild(grid);
 }
 
 function applyFilters() {
@@ -118,3 +170,39 @@ searchInput.addEventListener("input", applyFilters);
 statusFilter.addEventListener("change", applyFilters);
 
 fetchCharacters();
+
+// --- Cargar episodios y ubicaciones ---
+async function fetchEpisodes() {
+  let url = "https://rickandmortyapi.com/api/episode";
+  let allEpisodes = [];
+
+  while (url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    allEpisodes = allEpisodes.concat(data.results);
+    url = data.info.next;
+  }
+
+  episodesContainer.innerHTML += "<div class='episode-list'>" +
+    allEpisodes.map(ep => `<div class='card'><h3>${ep.name}</h3><p>${ep.episode}</p></div>`).join("") +
+    "</div>";
+}
+
+async function fetchLocations() {
+  let url = "https://rickandmortyapi.com/api/location";
+  let allLocations = [];
+
+  while (url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    allLocations = allLocations.concat(data.results);
+    url = data.info.next;
+  }
+
+  locationsContainer.innerHTML += "<div class='location-list'>" +
+    allLocations.map(loc => `<div class='card'><h3>${loc.name}</h3><p>${loc.type} - ${loc.dimension}</p></div>`).join("") +
+    "</div>";
+}
+
+fetchEpisodes();
+fetchLocations();

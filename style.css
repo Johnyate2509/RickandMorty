@@ -164,3 +164,31 @@ main section.active {
     flex-direction: column;
   }
 }
+
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: #fff;
+  text-align: center;
+}
+
+.card img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+
+.favorite-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffcc00;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
