@@ -1,3 +1,34 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const sections = document.querySelectorAll('main section');
+  const menuLinks = document.querySelectorAll('#main-nav ul li a');
+  document.body.style.backgroundColor = "#9dafac";
+
+  function showActiveSection() {
+      // Ocultar todas las secciones
+      sections.forEach(section => section.classList.remove('active'));
+
+      // Obtener el ID de la sección activa desde el hash de la URL o usar #home como predeterminado
+      let activeSectionId = window.location.hash || "#home";
+      let activeSection = document.querySelector(activeSectionId);
+
+      // Si la sección existe, mostrarla
+      if (activeSection) {
+          activeSection.classList.add('active');
+      }
+
+      // Marcar el enlace activo en el menú
+      menuLinks.forEach(link => {
+          link.classList.toggle("active", link.getAttribute("href") === activeSectionId);
+      });
+  }
+
+  // Llamar a la función al cargar la página
+  showActiveSection();
+
+  // Detectar cambios en la URL y actualizar la sección activa
+  window.addEventListener('hashchange', showActiveSection);
+});
+
 // Este script debe ser cargado con <script type="module" src="main.js"></script>
 
 // Esperar que cargue el DOM
