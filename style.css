@@ -5,47 +5,37 @@ body {
   padding: 0;
   background-color: #1a1a1a;
   color: #fff;
-}
-
-/* Splash Screen */
-#splash-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 1s ease, visibility 1s ease;
-}
-
-/* Mostrar solo sección activa */
-main section {
-  display: none;
-}
-
-main section.active {
-  display: block;
+  flex-direction: column; /* Aseguramos que los elementos se apilen verticalmente */
+  align-items: center; /* Centra el contenido horizontalmente */
+  min-height: 100vh; /* Asegura que el cuerpo ocupe toda la altura de la ventana */
+  text-align: center; /* Centra el texto */
 }
 
 /* Navegación principal */
+#main-nav {
+  width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la pantalla */
+  background-color: #333; /* Fondo gris para el menú */
+}
+
 #main-nav ul {
   display: flex;
-  justify-content: space-around;
-  background-color: #333;
+  justify-content: space-evenly; /* Distribuye los items de manera uniforme */
   list-style: none;
-  padding: 10px;
+  padding: 5px;
   margin: 0;
+}
+
+#main-nav ul li {
+  text-align: center; /* Centra los elementos dentro de cada li */
 }
 
 #main-nav ul li a {
   color: #fff;
   text-decoration: none;
-  padding: 10px;
+  padding: 5px;
+  display: block; /* Hace que el área clickable ocupe todo el espacio del li */
+  width: 100%; /* Hace que cada enlace ocupe todo el ancho del li */
 }
 
 #main-nav ul li a:hover,
@@ -193,6 +183,16 @@ main section.active {
   border-radius: 0.5rem;
   cursor: pointer;
 }
+
+.remove-favorite-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  background-color: #fa473a;
+}
+
 /* Estilos para contenedores de episodios y ubicaciones */
 .episode-list,
 .location-list {
@@ -257,4 +257,16 @@ main section.active {
 .episode-list,
 .location-list {
   color: #2b392b; /* Cambia esto por el color que quieras */
+}
+
+/* Contenedor principal de la página */
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Cambiado de 'center' a 'flex-start' para no afectar el menú */
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  margin-top: 20px;
 }
