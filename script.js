@@ -68,7 +68,7 @@ let characters = [];
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 async function fetchCharacters() {
-  let url = "https://rickandmortyapi.com/api/character";
+  let url = "http://rickandmortyapi.com/api/character";
   let allCharacters = [];
 
   while (url) {
@@ -188,7 +188,7 @@ fetchCharacters();
 
 // --- Cargar episodios y ubicaciones ---
 async function fetchEpisodes() {
-  let url = "https://rickandmortyapi.com/api/episode";
+  let url = "http://rickandmortyapi.com/api/episode";
   let allEpisodes = [];
 
   while (url) {
@@ -208,7 +208,7 @@ async function fetchEpisodes() {
 }
 
 async function fetchLocations() {
-  let url = "https://rickandmortyapi.com/api/location";
+  let url = "http://rickandmortyapi.com/api/location";
   let allLocations = [];
 
   while (url) {
