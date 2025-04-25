@@ -68,7 +68,7 @@ let characters = [];
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 async function fetchCharacters() {
-  let url = "https://rickandmortyapi.com/api/character"; // Cambié a HTTPS
+  let url = "http://rickandmortyapi.com/api/character"; // Cambié a HTTPS
   let allCharacters = [];
 
   try {
@@ -192,7 +192,7 @@ fetchCharacters();
 
 // --- Cargar episodios y ubicaciones ---
 async function fetchEpisodes() {
-  let url = "https://rickandmortyapi.com/api/episode"; // Cambié a HTTPS
+  let url = "http://rickandmortyapi.com/api/episode"; // Cambié a HTTPS
   let allEpisodes = [];
 
   try {
@@ -216,7 +216,7 @@ async function fetchEpisodes() {
 }
 
 async function fetchLocations() {
-  let url = "https://rickandmortyapi.com/api/location"; // Cambié a HTTPS
+  let url = "http://rickandmortyapi.com/api/location"; // Cambié a HTTPS
   let allLocations = [];
 
   try {
