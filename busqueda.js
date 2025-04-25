@@ -1,4 +1,4 @@
-import { characters, renderCharacters } from "./characters.js";
+import { characters, renderCharacters } from "./perrsonajes.js";
 
 const searchInput = document.getElementById("search-input");
 const statusFilter = document.getElementById("status-filter");
