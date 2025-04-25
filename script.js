@@ -68,19 +68,23 @@ let characters = [];
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
 async function fetchCharacters() {
-  let url = "http://rickandmortyapi.com/api/character";
+  let url = "https://rickandmortyapi.com/api/character"; // Cambié a HTTPS
   let allCharacters = [];
 
-  while (url) {
-    const res = await fetch(url);
-    const data = await res.json();
-    allCharacters = allCharacters.concat(data.results);
-    url = data.info.next;
-  }
+  try {
+    while (url) {
+      const res = await fetch(url);
+      const data = await res.json();
+      allCharacters = allCharacters.concat(data.results);
+      url = data.info.next;
+    }
 
-  characters = allCharacters;
-  renderCharacters(characters);
-  renderFavorites(); // Aseguramos que se llama solo cuando characters ya tiene datos
+    characters = allCharacters;
+    renderCharacters(characters);
+    renderFavorites(); // Aseguramos que se llama solo cuando characters ya tiene datos
+  } catch (error) {
+    console.error("Error fetching characters:", error);
+  }
 }
 
 function createCharacterCard(char, isFavorite) {
@@ -188,43 +192,51 @@ fetchCharacters();
 
 // --- Cargar episodios y ubicaciones ---
 async function fetchEpisodes() {
-  let url = "http://rickandmortyapi.com/api/episode";
+  let url = "https://rickandmortyapi.com/api/episode"; // Cambié a HTTPS
   let allEpisodes = [];
 
-  while (url) {
-    const res = await fetch(url);
-    const data = await res.json();
-    allEpisodes = allEpisodes.concat(data.results);
-    url = data.info.next;
-  }
+  try {
+    while (url) {
+      const res = await fetch(url);
+      const data = await res.json();
+      allEpisodes = allEpisodes.concat(data.results);
+      url = data.info.next;
+    }
 
-  episodesContainer.innerHTML += "<div class='episode-list'>" +
-    allEpisodes.map(ep => `
-      <div class='card episode-content'>
-        <h3>${ep.name}</h3>
-        <p>${ep.episode}</p>
-      </div>`).join("") +
-    "</div>";
+    episodesContainer.innerHTML += "<div class='episode-list'>" +
+      allEpisodes.map(ep => `
+        <div class='card episode-content'>
+          <h3>${ep.name}</h3>
+          <p>${ep.episode}</p>
+        </div>`).join("") +
+      "</div>";
+  } catch (error) {
+    console.error("Error fetching episodes:", error);
+  }
 }
 
 async function fetchLocations() {
-  let url = "http://rickandmortyapi.com/api/location";
+  let url = "https://rickandmortyapi.com/api/location"; // Cambié a HTTPS
   let allLocations = [];
 
-  while (url) {
-    const res = await fetch(url);
-    const data = await res.json();
-    allLocations = allLocations.concat(data.results);
-    url = data.info.next;
-  }
+  try {
+    while (url) {
+      const res = await fetch(url);
+      const data = await res.json();
+      allLocations = allLocations.concat(data.results);
+      url = data.info.next;
+    }
 
-  locationsContainer.innerHTML += "<div class='location-list'>" +
-    allLocations.map(loc => `
-      <div class='card location-content'>
-        <h3>${loc.name}</h3>
-        <p>${loc.type} - ${loc.dimension}</p>
-      </div>`).join("") +
-    "</div>";
+    locationsContainer.innerHTML += "<div class='location-list'>" +
+      allLocations.map(loc => `
+        <div class='card location-content'>
+          <h3>${loc.name}</h3>
+          <p>${loc.type} - ${loc.dimension}</p>
+        </div>`).join("") +
+      "</div>";
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+  }
 }
 
 fetchEpisodes();
